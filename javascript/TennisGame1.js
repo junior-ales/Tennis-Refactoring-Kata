@@ -1,8 +1,16 @@
+function Player(name) {
+  this.name = name;
+  this.score = 0;
+}
+
 var TennisGame1 = function(player1Name, player2Name) {
-    this.m_score1 = 0;
-    this.m_score2 = 0;
-    this.player1Name = player1Name;
-    this.player2Name = player2Name;
+    this.player1 = new Player(player1Name);
+    this.player2 = new Player(player2Name);
+
+    this.m_score1 = this.player1.score;
+    this.m_score2 = this.player2.score;
+    this.player1Name = this.player1.name;
+    this.player2Name = this.player2.name;
 };
 
 TennisGame1.prototype.wonPoint = function(playerName) {
