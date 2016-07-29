@@ -9,14 +9,12 @@ var TennisGame1 = function(player1Name, player2Name) {
 
     this.m_score1 = this.player1.score;
     this.m_score2 = this.player2.score;
-    this.player1Name = this.player1.name;
-    this.player2Name = this.player2.name;
 };
 
 TennisGame1.prototype.wonPoint = function(playerName) {
-    if (playerName === this.player1Name)
+    if (playerName === this.player1.name)
         this.m_score1 += 1;
-    if (playerName === this.player2Name)
+    if (playerName === this.player2.name)
         this.m_score2 += 1;
 };
 
@@ -40,10 +38,10 @@ TennisGame1.prototype.getScore = function() {
         }
     } else if (this.m_score1 >= 4 || this.m_score2 >= 4) {
         var minusResult = this.m_score1 - this.m_score2;
-        if (minusResult === 1) score = "Advantage " + this.player1Name;
-        else if (minusResult === -1) score = "Advantage " + this.player2Name;
-        else if (minusResult >= 2) score = "Win for " + this.player1Name;
-        else score = "Win for " + this.player2Name;
+        if (minusResult === 1) score = "Advantage " + this.player1.name;
+        else if (minusResult === -1) score = "Advantage " + this.player2.name;
+        else if (minusResult >= 2) score = "Win for " + this.player1.name;
+        else score = "Win for " + this.player2.name;
     } else {
         for (var i = 1; i < 3; i++) {
             if (i === 1) tempScore = this.m_score1;
