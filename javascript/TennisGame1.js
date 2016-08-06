@@ -36,14 +36,18 @@ var TennisGame1 = (function() {
     init: function(player1name, player2name) {
       this.player1 = PlayerFactory.create(player1name);
       this.player2 = PlayerFactory.create(player2name);
+
+      this.players = {};
+      this.players[player1name] = this.player1;
+      this.players[player2name] = this.player2;
+
       return this;
     },
 
     wonPoint: function(playerName) {
-      if (playerName === this.player1.name)
-        this.player1.scored();
-      if (playerName === this.player2.name)
-        this.player2.scored();
+      if (this.players[playerName]) {
+        this.players[playerName].scored();
+      }
     },
 
     getScore: function() {
