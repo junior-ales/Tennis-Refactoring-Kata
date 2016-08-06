@@ -1,67 +1,85 @@
-var TennisGame1 = function(player1Name, player2Name) {
-    this.m_score1 = 0;
-    this.m_score2 = 0;
-    this.player1Name = player1Name;
-    this.player2Name = player2Name;
-};
+var TennisGame1 = (function() {
+  var PlayerFactory = (function() {
+    var Player = {
+      init: function(name) {
+        this.name = name;
+        this.score = 0;
+        return this;
+      },
 
-TennisGame1.prototype.wonPoint = function(playerName) {
-    if (playerName === "player1")
-        this.m_score1 += 1;
-    else
-        this.m_score2 += 1;
-};
+      scored: function() { this.score++; }
+    };
 
-TennisGame1.prototype.getScore = function() {
-    var score = "";
-    var tempScore = 0;
-    if (this.m_score1 === this.m_score2) {
-        switch (this.m_score1) {
-            case 0:
-                score = "Love-All";
-                break;
-            case 1:
-                score = "Fifteen-All";
-                break;
-            case 2:
-                score = "Thirty-All";
-                break;
-            default:
-                score = "Deuce";
-                break;
-        }
-    } else if (this.m_score1 >= 4 || this.m_score2 >= 4) {
-        var minusResult = this.m_score1 - this.m_score2;
-        if (minusResult === 1) score = "Advantage player1";
-        else if (minusResult === -1) score = "Advantage player2";
-        else if (minusResult >= 2) score = "Win for player1";
-        else score = "Win for player2";
-    } else {
-        for (var i = 1; i < 3; i++) {
-            if (i === 1) tempScore = this.m_score1;
-            else {
-                score += "-";
-                tempScore = this.m_score2;
-            }
-            switch (tempScore) {
-                case 0:
-                    score += "Love";
-                    break;
-                case 1:
-                    score += "Fifteen";
-                    break;
-                case 2:
-                    score += "Thirty";
-                    break;
-                case 3:
-                    score += "Forty";
-                    break;
-            }
-        }
+    Object.freeze(Player);
+
+    return {
+      create: function(name) {
+        return Object.create(Player).init(name);
+      }
+    };
+  })();
+
+  var DRAW_SCORES = {
+    0: "Love-All",
+    1: "Fifteen-All",
+    2: "Thirty-All"
+  };
+
+  var SCORES = {
+    0: "Love",
+    1: "Fifteen",
+    2: "Thirty",
+    3: "Forty"
+  };
+
+  var Tennis = {
+    init: function(player1name, player2name) {
+      this.player1 = PlayerFactory.create(player1name);
+      this.player2 = PlayerFactory.create(player2name);
+
+      this.players = {};
+      this.players[player1name] = this.player1;
+      this.players[player2name] = this.player2;
+
+      return this;
+    },
+
+    wonPoint: function(playerName) {
+      if (this.players[playerName]) {
+        this.players[playerName].scored();
+      }
+    },
+
+    getScore: function() {
+      var scoreDiff = this.player1.score - this.player2.score;
+
+      var isDraw = scoreDiff === 0;
+      if (isDraw) {
+        return DRAW_SCORES[this.player1.score] || "Deuce";
+      }
+
+      var isHighScore = this.player1.score > 3 || this.player2.score > 3;
+      if (isHighScore) {
+        if (scoreDiff ===  1) return "Advantage " + this.player1.name;
+        if (scoreDiff === -1) return "Advantage " + this.player2.name;
+
+        return "Win for " + (scoreDiff > 1 ? this.player1.name : this.player2.name);
+      }
+
+      return SCORES[this.player1.score] + '-' + SCORES[this.player2.score];
     }
-    return score;
-};
+  };
+
+  Object.freeze(Tennis);
+
+  return {
+    init: function(player1name, player2name) {
+      return Object.create(Tennis).init(player1name, player2name);
+    },
+    type: 'oloo'
+  };
+})();
 
 if (typeof window === "undefined") {
-    module.exports = TennisGame1;
+  module.exports = TennisGame1;
 }

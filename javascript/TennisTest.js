@@ -14,6 +14,7 @@ var allScores = [
     [2, 2, "Thirty-All"],
     [3, 3, "Deuce"],
     [4, 4, "Deuce"],
+    [14, 14, "Deuce"],
 
     [1, 0, "Fifteen-Love"],
     [0, 1, "Love-Fifteen"],
@@ -58,7 +59,7 @@ var checkScore = function(reporter, TennisGame, player1Score, player2Score, expe
     var i;
 
     try {
-        game = new TennisGame("player1", "player2");
+      game = TennisGame.type === 'oloo' ? TennisGame.init("player1", "player2") : new TennisGame("player1", "player2");
         for (i = 0; i < highestScore; i++) {
             if (i < player1Score) {
                 game.wonPoint("player1");
