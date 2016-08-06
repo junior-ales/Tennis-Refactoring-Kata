@@ -19,10 +19,10 @@ var TennisGame1 = (function() {
     };
   })();
 
-  var SCORES = {
-    0: "Love",
-    1: "Fifteen",
-    2: "Thirty"
+  var DRAW_SCORES = {
+    0: "Love-All",
+    1: "Fifteen-All",
+    2: "Thirty-All"
   };
 
   var Tennis = {
@@ -40,50 +40,46 @@ var TennisGame1 = (function() {
     },
 
     getScore: function() {
+      var minusResult = this.player1.score - this.player2.score;
+
+      var isDraw = minusResult === 0;
+      if (isDraw) {
+        return DRAW_SCORES[this.player1.score] || "Deuce";
+      }
+
+      var isHighScore = this.player1.score >= 4 || this.player2.score >= 4;
+      if (isHighScore) {
+        if (minusResult ===  1) return "Advantage " + this.player1.name;
+        if (minusResult === -1) return "Advantage " + this.player2.name;
+
+        return "Win for " + (minusResult > 1 ? this.player1.name : this.player2.name);
+      }
+
       var score = "";
       var tempScore = 0;
 
-      if (this.player1.score === this.player2.score) {
-        if (SCORES[this.player1.score]) {
-          score = SCORES[this.player1.score] + "-All";
-        } else {
-          score = "Deuce";
+      for (var i = 1; i < 3; i++) {
+        if (i === 1) tempScore = this.player1.score;
+        else {
+          score += "-";
+          tempScore = this.player2.score;
         }
-      } else if (this.player1.score >= 4 || this.player2.score >= 4) {
-        var minusResult = this.player1.score - this.player2.score;
-
-        if (minusResult === 1) {
-          score = "Advantage " + this.player1.name;
-        } else if (minusResult === -1) {
-          score = "Advantage " + this.player2.name;
-        } else if (minusResult >= 2){
-          score = "Win for " + this.player1.name;
-        } else {
-          score = "Win for " + this.player2.name;
-        }
-      } else {
-        for (var i = 1; i < 3; i++) {
-          if (i === 1) tempScore = this.player1.score;
-          else {
-            score += "-";
-            tempScore = this.player2.score;
-          }
-          switch (tempScore) {
-          case 0:
-            score += "Love";
-            break;
-          case 1:
-            score += "Fifteen";
-            break;
-          case 2:
-            score += "Thirty";
-            break;
-          case 3:
-            score += "Forty";
-            break;
-          }
+        switch (tempScore) {
+        case 0:
+          score += "Love";
+          break;
+        case 1:
+          score += "Fifteen";
+          break;
+        case 2:
+          score += "Thirty";
+          break;
+        case 3:
+          score += "Forty";
+          break;
         }
       }
+
       return score;
     }
   };
