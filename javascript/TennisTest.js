@@ -58,7 +58,7 @@ var checkScore = function(reporter, TennisGame, player1Score, player2Score, expe
     var i;
 
     try {
-        game = new TennisGame("player1", "player2");
+      game = TennisGame.type === 'oloo' ? TennisGame.init("player1", "player2") : new TennisGame("player1", "player2");
         for (i = 0; i < highestScore; i++) {
             if (i < player1Score) {
                 game.wonPoint("player1");
